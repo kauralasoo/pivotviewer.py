@@ -1,0 +1,7 @@
+"Name","Type","IsFilterVisible","IsMetaDataVisible","IsWordWheelVisible",
+"Make","String",1,1,1
+"Model","String",1,1,1
+"Year","Number",1,1,0
+"Color","String",1,1,1
+"Doors","Number",1,1,0
+"image_path","String",0,0,0
