@@ -167,7 +167,7 @@ class PivotViewerCollectionCreator(object):
         collectionCreator.create(deepzoomImageNames, "collection.xml")
               
     
-    def create(self, name, facetsCsv, itemsCsv, imageFolder, destination):
+    def create(self, name, facetsCsv, itemsCsv, imageFolder, destination, deepZoomFolder = "deepzoom"):
         """
         Create PivotViewer collection.
         
@@ -176,16 +176,17 @@ class PivotViewerCollectionCreator(object):
         itemsCsv -- CSV file with the facet data.
         imageFolder -- folder containing the .jpg or .png images
         destination -- folder into which the PivotViewer collection will be created
+        deepZoomFolder -- Location for DeepZoom images. Relative path from the destination folder.
         """
         #Create necessary paths
-        deepZoomCollectionFolder = os.path.join(destination, "deepzoom")
+        deepZoomCollectionFolder = os.path.join(destination, deepZoomFolder)
         if not os.path.exists(deepZoomCollectionFolder):
             os.makedirs(deepZoomCollectionFolder)
         
         facets = self.loadFacetsFromCsv(facetsCsv)
         items = self.loadItemsFromCsv(itemsCsv)
         
-        collection = PivotViewerCollection(name, facets, items)
+        collection = PivotViewerCollection(name, facets, items, imgBase=os.path.join(deepZoomFolder, "collection.xml"))
         collection.save(os.path.join(destination, "collection.cxml"))
         
         #Extract image names from Collection items
@@ -198,7 +199,6 @@ class PivotViewerCollectionCreator(object):
             imageNames.append(item.values[imagePathColumn])
         
         #Create DeepZoom collection of the images
-        deepZoomCollectionFolder = os.path.join(destination, "deepzoom")
         self.createDeepZoomCollection(imageNames, imageFolder, deepZoomCollectionFolder)
             
 ####################################################################
