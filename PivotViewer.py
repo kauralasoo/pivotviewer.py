@@ -27,9 +27,9 @@ class PivotViewerCollection(object):
         else:
             raise ValueError("Number of values must be equal to the number of facets.")
     
-    def save(self, path):
+    def to_cxml(self):
         """
-        Save the collection to an XML file specified by path.
+        Convert the collection to CXML representation.
         """
         
         #Define Collection
@@ -68,12 +68,22 @@ class PivotViewerCollection(object):
                 facetNode = ET.SubElement(facetsNode, "Facet")
                 facetNode.set("Name", facet.name)
                 valueNode = ET.SubElement(facetNode, facet.type)
-                valueNode.set("Value", value)        
+                valueNode.set("Value", str(value))        
       
         indent(xml)
         #ET.dump(xml)
-        tree = ET.ElementTree(xml)
-        tree.write(path)
+        #tree = ET.ElementTree(xml)
+        return ET.tostring(xml)
+        #tree.write(path)
+    
+    def save(self, path):
+        """
+        Save the collection to a .cxml file.
+        """
+        cxml = self.to_cxml()
+        file = open(path,'w')
+        file.write(cxml)
+        
 
 class PivotViewerFacet(object):
     """
@@ -86,6 +96,9 @@ class PivotViewerFacet(object):
         self.isFilterVisible = isFilterVisible
         self.isMetaDataVisible = isMetaDataVisible
         self.isWordWheelVisible = isWordWheelVisible
+    
+    def __str__(self):
+        return self.name
 
 class PivotViewerItem(object):
     """
@@ -98,6 +111,9 @@ class PivotViewerItem(object):
         self.description = description
         self.values = values
         self.href = href
+    
+    def __str__(self):
+        return self.name
 
 class PivotViewerCollectionCreator(object):
     """
